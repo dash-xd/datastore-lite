@@ -1,3 +1,21 @@
+-- METATABLE INHERITOR FOR MULTIPLE INHERITANCE
+local function SearchParents(key, parents)
+    for i = 1, #parents do
+        local found = parents[i][key]
+        if found then
+            return found
+        end
+    end
+end
+
+local function RegisterParents(parents)
+    return {
+        __index = function(self, key)
+            return SearchParents(key, parents)
+        end
+    }
+end
+
 local HttpService = game:GetService("HttpService")
 local DataStoreService = game:GetService("DataStoreService")
 
@@ -77,24 +95,6 @@ end
 function SavableDSSLiteMethods:saveCacheAndReleaseFull()
     self:saveAndReleaseCache()
     self:releaseStore()
-end
-
--- METATABLE INHERITOR FOR MULTIPLE INHERITANCE
-local function SearchParents(key, parents)
-    for i = 1, #parents do
-        local found = parents[i][key]
-        if found then
-            return found
-        end
-    end
-end
-
-local function RegisterParents(parents)
-    return {
-        __index = function(self, key)
-            return SearchParents(key, parents)
-        end
-    }
 end
 
 -- Define constructor for DataStoreLite instances
